@@ -3,3 +3,7 @@ venv*/
 *.venv/
 env/
 .env/
+build/
+build/connect_coag_expert/
+*.pyz
+*.toc

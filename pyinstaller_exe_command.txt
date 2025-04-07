@@ -1,0 +1,1 @@
+pyinstaller --onefile --hidden-import=comtypes.stream --hidden-import=win32timezone connect_coag_expert.py
