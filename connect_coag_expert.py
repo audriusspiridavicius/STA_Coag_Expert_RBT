@@ -10,7 +10,7 @@ try:
 
     dm_app = app.window(best_match="STAGO_DM_Application", control_type="Window")
     dm_app.set_focus()
-
+    dm_app.print_control_identifiers()
     print("Application connected and focused.")
 
 except PywinautoTimeoutError as e:
