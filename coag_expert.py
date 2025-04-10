@@ -84,10 +84,18 @@ class CoagExpert:
         Navigate to the dashboard page of the CoagExpert application.
         This method simulates a click on the home button and refresh button to access the dashboard.
         """
-        pass
+
+        self.stago_dm_app.window(title="Dashboard", control_type="Text").click_input()
+        return DashboardPage(self.stago_dm_app)
 
 
 if __name__ == "__main__":
     coag_expert = CoagExpert()
+
+    dashboard = coag_expert.go_to_dashboard_page()
+    dashboard.automate_to_be_validated()
+
+
+
 
         
