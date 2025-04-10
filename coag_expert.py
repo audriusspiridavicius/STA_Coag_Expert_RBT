@@ -71,6 +71,12 @@ class CoagExpert:
             print("Unable to connect to the coag expert application")
             sys.exit()
 
+        """ connected to the coag expert application but login window appears """
+        
+        user_login = self.stago_dm_app.child_window(control_type="Edit", auto_id="tboxUserLogin")
+        if user_login.exists(timeout=2):
+            print("login window found. please enter your credentials")
+            sys.exit()
 
 
     def go_to_dashboard_page(self)-> DashboardPage:
