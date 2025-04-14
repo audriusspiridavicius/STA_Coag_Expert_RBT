@@ -1,9 +1,10 @@
-from dataclasses import dataclass, field
-from typing import List, Optional
+from dataclasses import dataclass
+from typing import List
 from pywinauto import WindowSpecification
-from pywinauto.keyboard import SendKeys
-from pywinauto.mouse import scroll
-from pywinauto.keyboard import send_keys
+
+
+
+
 @dataclass
 class DashboardPage:
 
@@ -67,17 +68,10 @@ class DashboardPage:
             print("Sample ID found")
             first_row.click_input()
         self.get_sample_status()
-        for sample in self.samples_to_be_validated:
-            
-            while not sample.is_visible():
-                page_down_button = self.dashboard.child_window(title="DataGridView")
-                if page_down_button.exists(timeout=1):
-                    send_keys("{PGDN}")
-                    print("Page down button clicked")
 
-                # self.dashboard.send_keys("{PGDN}")    
-                # SendKeys("{PGDN}")
-            
+        i= 0
+        while i < len(self.samples_to_be_validated) and i <= 10:
+            sample = self.samples_to_be_validated[i]
             
             if sample.is_visible():
                 print(f"Sample {sample} is visible")
@@ -87,6 +81,7 @@ class DashboardPage:
                 save_button = self.dashboard.child_window(control_type="Button", title="Save")
                 save_button.click_input()
                 self.get_sample_status()
+                i = 0
             else:
                 print(f"Sample {sample} is not visible")
 
