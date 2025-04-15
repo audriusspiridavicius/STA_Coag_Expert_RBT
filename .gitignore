@@ -7,3 +7,4 @@ build/
 build/connect_coag_expert/
 *.pyz
 *.toc
+*.log

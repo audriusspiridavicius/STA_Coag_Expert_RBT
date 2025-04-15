@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import List
 from pywinauto import WindowSpecification
-
+import logging
 
 
 
@@ -13,7 +13,7 @@ class DashboardPage:
 
     samples_to_be_validated: List[WindowSpecification]
 
-    def __init__(self, wnd: WindowSpecification) -> None:
+    def __init__(self, wnd: WindowSpecification, logger:logging.Logger) -> None:
         """
         Initialize the DashboardPage class.
         """
@@ -27,20 +27,23 @@ class DashboardPage:
         self.rerun_checkbox = self.dashboard.child_window(control_type="CheckBox", title="Selected To Be Rerun")
         self.validated_checkbox = self.dashboard.child_window(control_type="CheckBox", title="Validated")
 
+        self.logger = logger
+        
+        
         # uncheck the pending checkbox if it is checked
         if self.pending_checkbox.get_toggle_state() == 1:
             self.pending_checkbox.toggle()
-            print("Pending checkbox unchecked")
+            logger.info("Pending checkbox unchecked")
 
         # uncheck rerun checkbox if it is checked
         if self.rerun_checkbox.get_toggle_state() == 1:
             self.rerun_checkbox.toggle()
-            print("Rerun checkbox unchecked")
+            logger.info("Rerun checkbox unchecked")
         
         # uncheck validated checkbox if it is checked
         if self.validated_checkbox.get_toggle_state() == 1:
             self.validated_checkbox.toggle()
-            print("Validated checkbox unchecked")
+            logger.info("Validated checkbox unchecked")
 
 
 
@@ -64,9 +67,13 @@ class DashboardPage:
         """
         
         first_row = self.dashboard.child_window(title="Status Row 0")
+
         if first_row.exists(timeout=1):
-            print("Sample ID found")
+            self.logger.info("there is at least 1 sample with status -> to be validated")
             first_row.click_input()
+        else:
+            self.logger.warning("there is no samples with status -> to be validated")
+        
         self.get_sample_status()
 
         i= 0
@@ -74,16 +81,13 @@ class DashboardPage:
             sample = self.samples_to_be_validated[i]
             
             if sample.is_visible():
-                print(f"Sample {sample} is visible")
-                # self.refresh_button.click_input()
+
                 sample.double_click_input()
 
                 save_button = self.dashboard.child_window(control_type="Button", title="Save")
                 save_button.click_input()
                 self.get_sample_status()
                 i = 0
-            else:
-                print(f"Sample {sample} is not visible")
 
         if self.pending_checkbox.get_toggle_state() == 0:
             self.pending_checkbox.toggle()
