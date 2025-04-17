@@ -1,3 +1,4 @@
+import ctypes
 from logging import Logger
 from dashboard_page import DashboardPage
 from dataclasses import dataclass, field
@@ -59,7 +60,6 @@ class CoagExpert:
         """
         self.log = loggin_settings
         try:
-
             self.app = application.Application(backend="uia")
             self.app.connect(best_match="STAGO_DM_Application")
         
@@ -95,12 +95,19 @@ class CoagExpert:
 
 if __name__ == "__main__":
     
-    file_logger = FileLog.set_up_logging()
-    
-    coag_expert = CoagExpert(loggin_settings=file_logger)
+    try:
+        ctypes.windll.user32.BlockInput(True)
+        file_logger = FileLog.set_up_logging()
+        
+        coag_expert = CoagExpert(loggin_settings=file_logger)
 
-    dashboard = coag_expert.go_to_dashboard_page()
-    dashboard.automate_to_be_validated()
+        dashboard = coag_expert.go_to_dashboard_page()
+        dashboard.automate_to_be_validated()
+    
+    except Exception as e:
+        ctypes.windll.user32.BlockInput(False)
+    finally:
+        ctypes.windll.user32.BlockInput(False)
 
 
 
