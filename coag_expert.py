@@ -8,6 +8,7 @@ from pywinauto.timings import TimeoutError as PywinautoTimeoutError
 from pywinauto import application
 from pywinauto.findbestmatch import MatchError
 import sys
+from indicator import Indicator, MessageIndicator
 from log import BasicLog, Log, FileLog
 
 @dataclass
@@ -54,7 +55,7 @@ class CoagExpert:
             self.log.warning("home button not found")
 
 
-    def __init__(self, loggin_settings:Log = BasicLog.set_up_logging()) -> None:
+    def __init__(self, loggin_settings:Log = BasicLog.set_up_logging(), automation_indicator = Indicator()) -> None:
         """
         Initialize the CoagExpert class
         """
@@ -63,9 +64,13 @@ class CoagExpert:
             self.app = application.Application(backend="uia")
             self.app.connect(best_match="STAGO_DM_Application")
         
+            
             self.stago_dm_app = self.app.window(best_match="STAGO_DM_Application", control_type="Window")
             self.stago_dm_app.set_focus()
 
+            automation_indicator.apply(self.app)
+            
+            
             self._close_unwanted_dialogs()
             self._go_to_home_page()
 
@@ -99,7 +104,7 @@ if __name__ == "__main__":
         ctypes.windll.user32.BlockInput(True)
         file_logger = FileLog.set_up_logging()
         
-        coag_expert = CoagExpert(loggin_settings=file_logger)
+        coag_expert = CoagExpert(loggin_settings=file_logger, automation_indicator=MessageIndicator("Please wait. Work in progress..."))
 
         dashboard = coag_expert.go_to_dashboard_page()
         dashboard.automate_to_be_validated()
