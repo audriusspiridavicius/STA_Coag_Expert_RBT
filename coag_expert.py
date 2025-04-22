@@ -10,6 +10,8 @@ from pywinauto.findbestmatch import MatchError
 import sys
 from indicator import Indicator, MessageIndicator
 from log import BasicLog, Log, FileLog
+from detect_work import start_listeners
+
 
 @dataclass
 class CoagExpert:
@@ -100,7 +102,10 @@ class CoagExpert:
 
 if __name__ == "__main__":
     
+    time_period_to_check_activity = 30  # seconds
+
     try:
+        start_listeners(time_period_to_check_activity)
         ctypes.windll.user32.BlockInput(True)
         file_logger = FileLog.set_up_logging()
         
@@ -108,9 +113,11 @@ if __name__ == "__main__":
 
         dashboard = coag_expert.go_to_dashboard_page()
         dashboard.automate_to_be_validated()
+
     
     except Exception as e:
         ctypes.windll.user32.BlockInput(False)
+        file_logger.error(f"An error occurred: {e}")
     finally:
         ctypes.windll.user32.BlockInput(False)
 
