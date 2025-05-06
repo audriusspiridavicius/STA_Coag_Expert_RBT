@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+import time
 from typing import List
 from pywinauto import WindowSpecification
 import logging
@@ -65,7 +66,7 @@ class DashboardPage:
         """
         Automate the process to be validated.
         """
-        
+        time.sleep(1)
         first_row = self.dashboard.child_window(title="Status Row 0")
 
         if first_row.exists(timeout=1):
