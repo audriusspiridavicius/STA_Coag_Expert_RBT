@@ -1,4 +1,5 @@
 import logging
+import os
 
 
 class Log:
@@ -44,7 +45,12 @@ class FileLog(Log):
     
             logger = logging.getLogger(__name__)
             logger.setLevel(logging.DEBUG)
-            file_handler = logging.FileHandler('coag_expert_robot_logs.log')
+            
+            system_drive = os.environ.get('SYSTEMDRIVE', 'C:')
+            
+            if not os.path.exists(f'{system_drive}\\coag_exp_logs'):
+                os.makedirs(f'{system_drive}\\coag_exp_logs')
+            file_handler = logging.FileHandler(f'{system_drive}\\coag_exp_logs\\coag_expert_robot_logs.log', mode='a+')
             file_handler.setLevel(logging.DEBUG)
     
             file_handler.setFormatter(formatter)

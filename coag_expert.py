@@ -103,11 +103,11 @@ class CoagExpert:
 if __name__ == "__main__":
     
     time_period_to_check_activity = 30  # seconds
-
+    file_logger = FileLog.set_up_logging()
     try:
         start_listeners(time_period_to_check_activity)
         ctypes.windll.user32.BlockInput(True)
-        file_logger = FileLog.set_up_logging()
+       
         
         coag_expert = CoagExpert(loggin_settings=file_logger, automation_indicator=MessageIndicator("Please wait. Work in progress..."))
 
