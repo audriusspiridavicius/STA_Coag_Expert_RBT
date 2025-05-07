@@ -70,6 +70,14 @@ class CoagExpert:
             self.stago_dm_app = self.app.window(best_match="STAGO_DM_Application", control_type="Window")
             self.stago_dm_app.set_focus()
 
+            """ connected to the coag expert application but login window appears """
+        
+            user_login = self.stago_dm_app.child_window(control_type="Edit", auto_id="tboxUserLogin")
+            if user_login.exists(timeout=2):
+                self.log.warning("login window found. please enter your credentials")
+                sys.exit()
+
+
             automation_indicator.apply(self.app)
             
             
@@ -81,12 +89,6 @@ class CoagExpert:
             self.log.error("Unable to connect to the coag expert application")
             sys.exit()
 
-        """ connected to the coag expert application but login window appears """
-        
-        user_login = self.stago_dm_app.child_window(control_type="Edit", auto_id="tboxUserLogin")
-        if user_login.exists(timeout=2):
-            self.log.warning("login window found. please enter your credentials")
-            sys.exit()
 
 
     def go_to_dashboard_page(self)-> DashboardPage:
@@ -102,7 +104,7 @@ class CoagExpert:
 
 if __name__ == "__main__":
     
-    time_period_to_check_activity = 30  # seconds
+    time_period_to_check_activity = 3  # seconds
     file_logger = FileLog.set_up_logging()
     try:
         start_listeners(time_period_to_check_activity)
